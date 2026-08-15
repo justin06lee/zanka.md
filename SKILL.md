@@ -1,6 +1,6 @@
 ---
 name: zanka
-description: 'Use at the start of ANY project work — scaffolding, building, shipping, or maintaining — and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path (plus `make build`, `make install`, `make update`); macOS apps needing Accessibility/TCC permissions get their stale grants programmatically reset on every reinstall; and any task a connected MCP server can perform (Supabase migrations, Stripe operations, …) is done directly instead of handed back to the user — including initiating authentication when a server is connected but not yet authed. Triggers on new projects, README or docs work, package installs, build/install/release flows, desktop-app permission problems, and any "you should run this migration" moment.'
+description: 'Use at the start of ANY project work — scaffolding, building, shipping, or maintaining — and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path (plus `make build`, `make install`, `make update`); macOS apps needing Accessibility/TCC permissions get their stale grants programmatically reset on every reinstall; and any task a connected MCP server can perform (Supabase migrations, Stripe operations, …) is done directly instead of handed back to the user — including initiating authentication when a server is connected but not yet authed. Triggers on new projects, README or docs work, package installs, build/install/release flows, desktop-app permission problems, and any "you should run this migration" moment.'
 ---
 
 # zanka.md
@@ -14,6 +14,7 @@ You are drilling the fundamentals of this user's workflow the way Zanka Nijiku d
 3. **Complexity gets absorbed into `make`.** If the project is more than a one-command dev server, plain `make` must do everything.
 4. **macOS permission grants die with the old binary.** Reset them programmatically on every reinstall — never make the user click through System Settings archaeology.
 5. **If a connected MCP server can do the task, you do it.** Never hand the user an action item a tool could have executed.
+6. **`master`, not `main`.** Every repo's default branch is `master` — initialize with it, and rename stray `main` branches.
 
 ---
 
@@ -123,6 +124,16 @@ Before telling the user *any* action item, check whether a connected MCP server 
 - Tools that require explicit cost confirmation (e.g. creating paid infrastructure) — surface the cost and confirm first.
 - The user explicitly reserved the action for themselves.
 
+## 6. master, not main
+
+The default branch of every repo is `master`:
+
+- New repos: `git init -b master`. Never `-b main`, and never trust the machine's `init.defaultBranch` — pass `-b master` explicitly.
+- Existing local repos sitting on `main`: rename with `git branch -m main master` as part of your work there, and mention that you did.
+- If the repo has a remote where `main` is already published, the local rename still happens, but changing the remote (pushing `master`, moving the default branch, deleting remote `main`) affects collaborators and CI — confirm with the user before touching it.
+- Anything you write that names the default branch — CI workflows, scripts, docs, badge URLs — says `master`.
+- When another skill, tool, or habit defaults to `main` (e.g. a `git init -b main` reflex), this rule wins.
+
 ## End-of-task drill
 
 Run through this every time you finish work in a project:
@@ -133,3 +144,4 @@ Run through this every time you finish work in a project:
 4. `make install` puts the binary on `$PATH` (runnable by name from anywhere)? `make update` does stop → delete → build → install → restart?
 5. For TCC-permissioned apps: the permission reset is baked into `make`/`make update`, not documented as manual steps?
 6. Zero user-facing action items that a connected MCP server could have executed — and no MCP server skipped for being unauthenticated?
+7. Default branch is `master`, with no stray `main` left behind?
