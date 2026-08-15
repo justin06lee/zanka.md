@@ -1,0 +1,43 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="660" height="220" viewBox="0 0 660 220" role="img" aria-label="zanka.md — fundamentals, drilled to reflex">
+  <defs>
+    <linearGradient id="gold" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0" stop-color="#c96f1f"/>
+      <stop offset="1" stop-color="#f2b344"/>
+    </linearGradient>
+  </defs>
+
+  <!-- card -->
+  <rect x="1" y="1" width="658" height="218" rx="18" fill="#17151b" stroke="#2c2833" stroke-width="2"/>
+
+  <!-- Lovely Assistaff -->
+  <g transform="translate(112,196) rotate(-22)">
+    <!-- shaft -->
+    <rect x="-6" y="-150" width="12" height="152" rx="6" fill="url(#gold)"/>
+    <!-- two-pronged top -->
+    <path d="M0 -145 C -4 -160, -12 -170, -18 -182" stroke="url(#gold)" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <path d="M0 -145 C 4 -160, 12 -170, 18 -182" stroke="url(#gold)" stroke-width="9" stroke-linecap="round" fill="none"/>
+    <!-- activated spikes -->
+    <path d="M -6 -118 L -24 -126 L -6 -133 Z" fill="#f2b344"/>
+    <path d="M -6 -92 L -22 -100 L -6 -107 Z" fill="#e39a30"/>
+    <path d="M 6 -105 L 24 -113 L 6 -120 Z" fill="#f2b344"/>
+    <path d="M 6 -79 L 22 -87 L 6 -94 Z" fill="#e39a30"/>
+    <!-- grip wraps -->
+    <rect x="-7.5" y="-54" width="15" height="7" rx="2.5" fill="#7c4a12"/>
+    <rect x="-7.5" y="-40" width="15" height="7" rx="2.5" fill="#7c4a12"/>
+  </g>
+
+  <!-- grit / splatter -->
+  <circle cx="52" cy="52" r="4.5" fill="#f2b344" opacity="0.5"/>
+  <circle cx="70" cy="36" r="2.5" fill="#f2b344" opacity="0.35"/>
+  <circle cx="176" cy="44" r="3" fill="#e39a30" opacity="0.4"/>
+  <circle cx="160" cy="176" r="2.5" fill="#f2b344" opacity="0.3"/>
+  <path d="M186 70 l 14 -8 M190 84 l 16 -4" stroke="#8f8a97" stroke-width="2" stroke-linecap="round" opacity="0.5"/>
+
+  <!-- wordmark -->
+  <g font-family="ui-monospace, 'SF Mono', Menlo, 'Cascadia Mono', monospace">
+    <text x="250" y="80" font-size="13" letter-spacing="3" fill="#b98a3e">愛棒 — LOVELY ASSISTAFF</text>
+    <text x="246" y="132" font-size="54" font-weight="700" fill="#f4f1ea">zanka<tspan fill="#f2b344">.md</tspan></text>
+    <path d="M250 148 H 502" stroke="#f2b344" stroke-width="3" stroke-linecap="round" opacity="0.55"/>
+    <text x="250" y="176" font-size="16" fill="#8f8a97">fundamentals, drilled to reflex</text>
+  </g>
+</svg>
