@@ -1,6 +1,6 @@
 ---
 name: zanka
-description: 'Use at the start of ANY project work — scaffolding, building, shipping, or maintaining — and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path (plus `make build`, `make install`, `make update`); macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on every reinstall; and any task a connected MCP server can do (Supabase migrations, Stripe operations, …) is done directly instead of handed back to the user, including initiating auth for unauthenticated servers. Triggers on new projects, README or docs work, package installs, build/install/release flows, desktop-app permission problems, and any "you should run this migration" moment.'
+description: 'Use at the start of ANY project work — scaffolding, building, shipping, or maintaining — and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path (plus `make build`, `make install`, `make update`); macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on every reinstall; and for services the project actively uses, tasks their MCP servers can do (Supabase migrations, Stripe ops) are done directly — auth included — instead of handed back, while servers for unused services are never probed. Triggers on new projects, README or docs work, package installs, build/install/release flows, desktop-app permission problems, and any "you should run this migration" moment.'
 ---
 
 # zanka.md
@@ -13,7 +13,7 @@ You are drilling the fundamentals of this user's workflow the way Zanka Nijiku d
 2. **bun. Always bun.** Never npm, pnpm, yarn, or npx.
 3. **Complexity gets absorbed into `make`.** If the project is more than a one-command dev server, plain `make` must do everything.
 4. **macOS permission grants die with the old binary.** Reset them programmatically on every reinstall — never make the user click through System Settings archaeology.
-5. **If a connected MCP server can do the task, you do it.** Never hand the user an action item a tool could have executed.
+5. **If a connected MCP server can do the task, you do it** — but only for services the project actually uses. Never hand the user an action item a tool could have executed, and never probe servers for services the project doesn't touch.
 6. **`master`, not `main`.** Every repo's default branch is `master` — initialize with it, and rename stray `main` branches.
 
 ---
@@ -110,11 +110,13 @@ Additional discipline:
 
 ## 5. MCP servers: do, don't delegate
 
-Before telling the user *any* action item, check whether a connected MCP server can perform it. If it can, perform it:
+**Scope first: an MCP server only exists for you once the project actually uses its service.** A connected server is not an invitation to go looking for work. Before touching one, confirm the project genuinely integrates that service — its SDK in the dependencies (`@supabase/supabase-js`, `stripe`, …), env vars or config pointing at it, a migrations directory, real API calls in the code. A frontend with no backend yet, or an app that simply doesn't use Supabase/Stripe, means those servers stay completely untouched — no "just in case" probing, no session-start state checks, no suggesting the service.
+
+For services the project **does** use, the direction flips — do, don't delegate. Before telling the user *any* action item, check whether the service's MCP server can perform it. If it can, perform it:
 
 - Pending Supabase migration → apply it with the Supabase MCP tools yourself. Never say "there's a migration you need to run."
 - Stripe configuration, refunds, lookups → the Stripe MCP tools.
-- Same for any other connected server: the presence of the tool is the instruction to use it.
+- Same for any other service the project uses: the presence of its tools is the instruction to use them.
 
 **Authentication:** if a server is on the MCP list but not authenticated, that is not a reason to skip or defer. Initiate the auth flow immediately, tell the user exactly what to do to complete it ("a browser window/URL is ready — click Authorize"), and then finish the original task in the same session. Silently ignoring an unauthenticated server or pushing the task "for later" is a failure.
 
@@ -143,5 +145,5 @@ Run through this every time you finish work in a project:
 3. If the project outgrew a one-command dev server: Makefile present, and a bare `make` does the whole golden path?
 4. `make install` puts the binary on `$PATH` (runnable by name from anywhere)? `make update` does stop → delete → build → install → restart?
 5. For TCC-permissioned apps: the permission reset is baked into `make`/`make update`, not documented as manual steps?
-6. Zero user-facing action items that a connected MCP server could have executed — and no MCP server skipped for being unauthenticated?
+6. Zero user-facing action items that a connected MCP server could have executed, no server skipped for being unauthenticated — and no server touched for a service the project doesn't use?
 7. Default branch is `master`, with no stray `main` left behind?
