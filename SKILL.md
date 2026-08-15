@@ -1,5 +1,6 @@
 ---
 name: zanka
+version: 1.0.0
 description: 'Use at the start of ANY project work — scaffolding, building, shipping, or maintaining — and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path (plus `make build`, `make install`, `make update`); macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on every reinstall; and for services the project actively uses, tasks their MCP servers can do (Supabase migrations, Stripe ops) are done directly — auth included — instead of handed back, while servers for unused services are never probed. Triggers on new projects, README/docs work, package installs, build/install/release flows, desktop-app permission problems, and "run this migration" moments.'
 ---
 
