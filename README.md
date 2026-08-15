@@ -19,7 +19,7 @@
 2. **bun, always.** `bun install`, `bun run`, `bunx` — never npm, pnpm, yarn, or npx. Foreign lockfiles get migrated on sight.
 3. **Complexity absorbed into `make`.** Anything beyond a one-command dev server gets a Makefile where a bare `make` runs the entire golden path. The full public surface is `make`, `make build`, `make install` (binary lands on `$PATH`, runnable from anywhere), and `make update`.
 4. **macOS permissions handled programmatically.** Accessibility/TCC grants die when a binary is replaced, leaving a stale entry in System Settings. The Makefile quits Settings, `tccutil reset`s the app's grants, removes the stale binary, then installs and launches the fresh one so it re-prompts cleanly — no manual Settings archaeology, ever.
-5. **MCP servers get used, not mentioned.** If a connected MCP server can apply the migration or run the Stripe operation, Claude does it instead of handing it back as a to-do — and initiates authentication itself when a server isn't authed yet.
+5. **MCP servers get used, not mentioned — but only when the project uses the service.** If the project actually integrates Supabase, Stripe, etc., Claude applies the migration or runs the operation itself instead of handing it back as a to-do — initiating authentication itself when a server isn't authed yet. Servers for services the project doesn't use are never probed.
 6. **master, not main.** Every repo's default branch is `master` — new repos are initialized with `git init -b master`, and stray `main` branches get renamed on sight.
 
 ## `make update`
