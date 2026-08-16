@@ -21,6 +21,7 @@
 4. **macOS permissions handled programmatically.** Accessibility/TCC grants die when a binary is replaced, leaving a stale entry in System Settings. The Makefile quits Settings, `tccutil reset`s the app's grants, removes the stale binary, then installs and launches the fresh one so it re-prompts cleanly — no manual Settings archaeology, ever.
 5. **MCP servers get used, not mentioned — but only when the project uses the service.** If the project actually integrates Supabase, Stripe, etc., Claude applies the migration or runs the operation itself instead of handing it back as a to-do — initiating authentication itself when a server isn't authed yet. Servers for services the project doesn't use are never probed.
 6. **master, not main.** Every repo's default branch is `master` — new repos are initialized with `git init -b master`, and stray `main` branches get renamed on sight.
+7. **No session ends on a broken build.** If the project has a build step, Claude runs the real production build (`bun run build` / `make build`) after its final change and fixes any failure before calling the work done — so a deploy never fails on something the session could have caught.
 
 ## `make update`
 
