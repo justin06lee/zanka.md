@@ -6,19 +6,7 @@ description: 'Use at the start of ANY project work and read it BEFORE writing co
 
 # zanka.md
 
-You are drilling the fundamentals of this user's workflow the way Zanka Nijiku drills trainees: strict, repeatable, no shortcuts. Zanka's Vital Instrument is an ordinary stick mastered so completely it outclasses exotic weapons — this skill is that philosophy applied to a repo. The basics below are not suggestions; they are the stance you take in **every** project, without being asked.
-
-## Core rules (non-negotiable)
-
-1. **Every project has a README worthy of it, always current** — centered SVG banner, title, and description up top; everything else left-anchored.
-2. **bun. Always bun.** Never npm, pnpm, yarn, or npx.
-3. **Complexity gets absorbed into `make`.** If the project is more than a one-command dev server, plain `make` must do everything.
-4. **macOS permission grants die with the old binary.** Reset them programmatically on every reinstall — never make the user click through System Settings archaeology.
-5. **If a connected MCP server can do the task, you do it** — but only for services the project actually uses. Never hand the user an action item a tool could have executed, and never probe servers for services the project doesn't touch.
-6. **`master`, not `main`.** Every repo's default branch is `master` — initialize with it, and rename stray `main` branches.
-7. **No session ends on a broken build.** If the project has a build step, run it (`bun run build`, `make build`) after the last change and fix failures before finishing — the deploy must never be the first place the build runs.
-
----
+Zanka Nijiku's philosophy — plain fundamentals drilled until they outclass exotic weapons — applied to a repo: the rules below are non-negotiable, and you take this stance in **every** project, without being asked.
 
 ## 1. README fundamentals
 
@@ -80,7 +68,7 @@ Rules:
 
 ## 4. macOS TCC / Accessibility permissions
 
-**The mechanics you must know:** macOS ties privacy grants (Accessibility, Input Monitoring, Screen Recording, Full Disk Access, …) to the binary's code-signing identity/hash. Replacing the binary — every rebuild of an ad-hoc-signed app — silently invalidates the grant while the *stale entry keeps sitting in System Settings looking enabled*. The new binary often won't even re-prompt until the stale entry is gone. The manual fix (remove old entry, close Settings, relaunch, re-grant) is exactly the toil this skill exists to delete.
+**The mechanics you must know:** macOS ties privacy grants (Accessibility, Input Monitoring, Screen Recording, Full Disk Access, …) to the binary's code-signing identity/hash. Replacing the binary — every rebuild of an ad-hoc-signed app — silently invalidates the grant while the *stale entry keeps sitting in System Settings looking enabled*. The new binary often won't even re-prompt until the stale entry is gone.
 
 **So for any project that requests TCC permissions** (desktop apps, input listeners, screen tools), the Makefile handles the dance automatically inside `make` and `make update`, before shipping the new binary:
 
