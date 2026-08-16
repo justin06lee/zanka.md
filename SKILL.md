@@ -1,7 +1,7 @@
 ---
 name: zanka
 version: 1.0.0
-description: 'Use at the start of ANY project work — scaffolding, building, shipping, or maintaining — and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path (plus `make build`, `make install`, `make update`); macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on every reinstall; and for services the project actively uses, tasks their MCP servers can do (Supabase migrations, Stripe ops) are done directly — auth included — instead of handed back, while servers for unused services are never probed. Triggers on new projects, README/docs work, package installs, build/install/release flows, desktop-app permission problems, and "run this migration" moments.'
+description: 'Use at the start of ANY project work — scaffolding, building, shipping, or maintaining — and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path; projects with a build step end every session with the production build run and passing (`bun run build`); macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on every reinstall; and for services the project actively uses, tasks their MCP servers can do (Supabase migrations, Stripe ops) are done directly — auth included — instead of handed back, while servers for unused services are never probed. Triggers on new projects, README/docs work, package installs, build/install/release flows, desktop-app permission problems, and "run this migration" moments.'
 ---
 
 # zanka.md
@@ -16,6 +16,7 @@ You are drilling the fundamentals of this user's workflow the way Zanka Nijiku d
 4. **macOS permission grants die with the old binary.** Reset them programmatically on every reinstall — never make the user click through System Settings archaeology.
 5. **If a connected MCP server can do the task, you do it** — but only for services the project actually uses. Never hand the user an action item a tool could have executed, and never probe servers for services the project doesn't touch.
 6. **`master`, not `main`.** Every repo's default branch is `master` — initialize with it, and rename stray `main` branches.
+7. **No session ends on a broken build.** If the project has a build step, run it (`bun run build`, `make build`) after the last change and fix failures before finishing — the deploy must never be the first place the build runs.
 
 ---
 
@@ -137,6 +138,15 @@ The default branch of every repo is `master`:
 - Anything you write that names the default branch — CI workflows, scripts, docs, badge URLs — says `master`.
 - When another skill, tool, or habit defaults to `main` (e.g. a `git init -b main` reflex), this rule wins.
 
+## 7. The build gate
+
+If the project has a build step — a website that must compile to deploy, a bundled app, anything where a failed build means a failed deploy — the work is not done until that build passes locally, at the end of the session:
+
+- After the **last** change, run the real production build: `bun run build`, `make build`, or whatever the deploy pipeline actually runs. The dev server proves nothing — dev mode tolerates what production builds reject (type errors, unused imports, strict lint, missing build-time env).
+- A failing build is yours to fix **now**, in the same session. Never end a turn leaving the user to discover the breakage as a failed deploy and a redeploy cycle.
+- Ran the build mid-session? It doesn't count — anything edited afterwards invalidates it. The gate is the build passing *after the final edit*.
+- If the build genuinely can't run locally (requires secrets or infrastructure you don't have), say so explicitly — never imply it was verified when it wasn't.
+
 ## End-of-task drill
 
 Run through this every time you finish work in a project:
@@ -148,3 +158,4 @@ Run through this every time you finish work in a project:
 5. For TCC-permissioned apps: the permission reset is baked into `make`/`make update`, not documented as manual steps?
 6. Zero user-facing action items that a connected MCP server could have executed, no server skipped for being unauthenticated — and no server touched for a service the project doesn't use?
 7. Default branch is `master`, with no stray `main` left behind?
+8. If the project has a build step: did the production build (`bun run build` / `make build`) pass *after* the final change?
