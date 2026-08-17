@@ -1,6 +1,6 @@
 <div align="center">
 
-<img src="assets/zanka.svg" alt="zanka.md" width="440" />
+<img src="assets/zanka.png" alt="zanka.md" width="330" />
 
 # zanka.md
 
