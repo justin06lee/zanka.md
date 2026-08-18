@@ -22,6 +22,7 @@
 5. **MCP servers get used, not mentioned — but only when the project uses the service.** If the project actually integrates Supabase, Stripe, etc., Claude applies the migration or runs the operation itself instead of handing it back as a to-do — initiating authentication itself when a server isn't authed yet. Servers for services the project doesn't use are never probed.
 6. **master, not main.** Every repo's default branch is `master` — new repos are initialized with `git init -b master`, and stray `main` branches get renamed on sight.
 7. **No session ends on a broken build.** If the project has a build step, Claude runs the real production build (`bun run build` / `make build`) after its final change and fixes any failure before calling the work done — so a deploy never fails on something the session could have caught.
+8. **Publishing gets flagged, never done silently — or autonomously.** When a package or library's shipped surface changes, Claude preps the release (version bump, changelog, passing build) and then tells you explicitly that it needs publishing, with the exact command. It never publishes for you: that's public and effectively irreversible, so it's the one place the do-it-yourself default stops.
 
 ## `make update`
 
