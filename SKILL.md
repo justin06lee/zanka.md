@@ -1,7 +1,7 @@
 ---
 name: zanka
-version: 1.4.3
-description: 'Use at the start of ANY project work and read it BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path; projects with a build step end every session with the production build run and passing (`bun run build`); macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on every reinstall; and for services the project actively uses, tasks their MCP servers can do (Supabase migrations, Stripe ops) are done directly — auth included — instead of handed back, while servers for unused services are never probed. Triggers on new projects, README/docs work, package installs, build/install/release flows, desktop-app permission problems, and "run this migration" moments.'
+version: 1.5.0
+description: 'Use at the start of ANY project work, BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path; projects with a build step end every session with the production build run and passing (`bun run build`); packages whose shipped surface changed end with an explicit prompt to publish, never an autonomous one; macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on reinstall; and MCP servers are used directly — auth included — for services the project actually uses, never probed for those it doesn''t. Triggers on new projects, README/docs work, package installs, build/install/release/publish flows, desktop-app permission problems, and "run this migration" moments.'
 ---
 
 # zanka.md
@@ -142,6 +142,16 @@ If the project has a build step — a website that must compile to deploy, a bun
 - Ran the build mid-session? It doesn't count — anything edited afterwards invalidates it. The gate is the build passing *after the final edit*.
 - If the build genuinely can't run locally (requires secrets or infrastructure you don't have), say so explicitly — never imply it was verified when it wasn't.
 
+## 8. Say when it needs publishing
+
+For anything other people consume — an npm/JSR package, a Go module, a Homebrew formula, a crate, a GitHub Action, a registry entry — a merged change that was never published means the public version is still the old one. So whenever a change lands in what actually ships:
+
+- Prepare the release completely: bump the version per SemVer (patch/minor/major by what changed), update the changelog and docs, confirm the build passes and the packaged file list/exports are right.
+- Then **tell the user, explicitly and last**: what changed, the version it should go out as, and the exact command (`bun publish`, `npm publish --access public`, `gh release create`, `git push --follow-tags`, …). State it as an action they need to take, not as a passing remark.
+- **Never publish autonomously.** Publishing is public and effectively irreversible — npm's unpublish window is 72h, a pushed tag is permanent, and consumers pull instantly. This is the deliberate exception to rule 5: the "do, don't delegate" default stops at the registry.
+- Never end a session having changed a library's shipped surface without saying whether it needs publishing. "It's committed" is not "it's released", and a stale public package is a silent bug for everyone downstream.
+- When a change genuinely doesn't need publishing (tests, CI, a README that isn't packaged), say that too — so silence never has to be guessed at.
+
 ## End-of-task drill
 
 Run through this every time you finish work in a project:
@@ -154,3 +164,4 @@ Run through this every time you finish work in a project:
 6. Zero user-facing action items that a connected MCP server could have executed, no server skipped for being unauthenticated — and no server touched for a service the project doesn't use?
 7. Default branch is `master`, with no stray `main` left behind?
 8. If the project has a build step: did the production build (`bun run build` / `make build`) pass *after* the final change?
+9. If it's a package/library whose shipped surface changed: is the version bumped and the user explicitly told to publish, with the command?
