@@ -1,7 +1,7 @@
 ---
 name: zanka
-version: 1.6.0
-description: 'Use at the start of ANY project work, BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps an up-to-date README headed by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` does the entire golden path; projects with a build step end every session with the production build run and passing (`bun run build`); packages whose shipped surface changed end with an explicit prompt to publish, never an autonomous one; macOS apps needing Accessibility/TCC permissions get stale grants reset programmatically on reinstall; and MCP servers are used directly — auth included — for services the project actually uses, never probed for those it doesn''t. Triggers on new projects, README/docs work, package installs, build/install/release/publish flows, desktop-app permission problems, and "run this migration" moments.'
+version: 1.7.0
+description: 'Use at the start of ANY project work, BEFORE writing code, docs, or build tooling. Governs workflow fundamentals: every project keeps a current README led by a centered SVG banner, title, and description; bun replaces npm/pnpm/yarn/npx everywhere; every repo''s default branch is master, never main; anything beyond a one-command dev server gets a Makefile where plain `make` runs the golden path; projects with a build step end the session with the production build passing (`bun run build`); every server or watcher you start is stopped before the turn ends; packages whose shipped surface changed end with an explicit publish prompt, never autonomously; macOS apps needing Accessibility/TCC grants reset stale ones on reinstall; and MCP servers are used directly — auth included — for services the project uses, never probed for those it doesn''t. Triggers on new projects, README/docs work, package installs, dev-server runs, build/release/publish flows, app permission problems, and "run this migration" moments.'
 ---
 
 # zanka.md
@@ -141,7 +141,28 @@ If the project has a build step — a website that must compile to deploy, a bun
 - Ran the build mid-session? It doesn't count — anything edited afterwards invalidates it. The gate is the build passing *after the final edit*.
 - If the build genuinely can't run locally (requires secrets or infrastructure you don't have), say so explicitly — never imply it was verified when it wasn't.
 
-## 8. Say when it needs publishing
+## 8. Servers you start, you stop
+
+A dev server, watcher, or daemon you spin up is **your** instrument for verifying work — never a way to hand the user a finished product. The default is not to start one at all.
+
+**The only reasons to start one:**
+
+- **Verification you can't do statically** — confirming the page actually renders, the endpoint really returns what you're about to claim, the layout survives, the migration took. Screenshots of a visual change count.
+- **You're blocked on the user**, and the running thing is what unblocks you: they need to look at a page, click through a flow, or pick between two rendered options before you can continue.
+- **The user asked for it** — "start the dev server", "show me /settings", "run it and leave it up". Then the running server *is* the deliverable.
+
+**Never start a server to present your work.** "Done — the dev server is running at http://localhost:3000, take a look" is exactly the habit this rule exists to kill. Finished work is described in the response and verified by you before you claim it; if the user wants to see it running, give them the command and let them run it.
+
+**Everything you start, you stop, before you hand the turn back:**
+
+- Record the PID and port at launch (`bun run dev & echo $!`, or whatever the tool reports) and kill that PID by the end of the turn. You cannot clean up what you never wrote down.
+- **Kill only what you started.** If `lsof -i:3000` shows a process that was already there when you arrived, it's the user's — leave it alone, and don't stack a duplicate on top of it either; reuse it or pick another port.
+- Confirm the shutdown landed (`lsof -i:<port>` comes back empty). A stuck process squatting on a port is worse than never having started one, because the next run fails for a reason that looks unrelated to anything you did.
+- This covers everything you launch in the background, not just HTTP: `--watch`/`--hot` processes and file watchers, tunnels (`ngrok`, `cloudflared`), `docker compose up` stacks, background test runners, queue workers, agents you `launchctl load`.
+
+**The one thing allowed to outlive the turn** is a server the user explicitly asked to have running. Even then it isn't left silently: say what's running, on which port, and the exact command to stop it. A server that survives the turn unannounced is a bug — the user finds it days later still holding a port, or never finds it at all.
+
+## 9. Say when it needs publishing
 
 For anything other people consume — an npm/JSR package, a Go module, a Homebrew formula, a crate, a GitHub Action, a registry entry — a merged change that was never published means the public version is still the old one. So whenever a change lands in what actually ships:
 
@@ -163,4 +184,5 @@ Run through this every time you finish work in a project:
 6. Zero user-facing action items that a connected MCP server could have executed, no server skipped for being unauthenticated — and no server touched for a service the project doesn't use?
 7. Default branch is `master`, with no stray `main` left behind?
 8. If the project has a build step: did the production build (`bun run build` / `make build`) pass *after* the final change?
-9. If it's a package/library whose shipped surface changed: is the version bumped and the user explicitly told to publish, with the command?
+9. Every server, watcher, and background process you started stopped and its port free — except one the user asked to keep running, which you named with its stop command?
+10. If it's a package/library whose shipped surface changed: is the version bumped and the user explicitly told to publish, with the command?

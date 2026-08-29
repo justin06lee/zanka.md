@@ -22,7 +22,8 @@
 5. **MCP servers get used, not mentioned — but only when the project uses the service.** If the project actually integrates Supabase, Stripe, etc., Claude applies the migration or runs the operation itself instead of handing it back as a to-do — initiating authentication itself when a server isn't authed yet. Servers for services the project doesn't use are never probed.
 6. **master, not main.** Every repo's default branch is `master` — new repos are initialized with `git init -b master`, and stray `main` branches get renamed on sight.
 7. **No session ends on a broken build.** If the project has a build step, Claude runs the real production build (`bun run build` / `make build`) after its final change and fixes any failure before calling the work done — so a deploy never fails on something the session could have caught.
-8. **Publishing gets flagged, never done silently — or autonomously.** When a package or library's shipped surface changes, Claude preps the release (version bump, changelog, passing build) and then tells you explicitly that it needs publishing, with the exact command. It never publishes for you: that's public and effectively irreversible, so it's the one place the do-it-yourself default stops.
+8. **Servers get stopped, not left running.** A dev server is Claude's instrument for verifying work — checking a page renders, taking a screenshot, getting you to look at something it's blocked on — never a way to present a finished product. "It's running at localhost:3000, take a look" is the habit this kills. Whatever gets started gets recorded and killed before the turn ends, its port confirmed free, and anything that was already running when Claude arrived is left alone. The one exception is a server you explicitly asked to keep up — and even then Claude names it, its port, and the command to stop it.
+9. **Publishing gets flagged, never done silently — or autonomously.** When a package or library's shipped surface changes, Claude preps the release (version bump, changelog, passing build) and then tells you explicitly that it needs publishing, with the exact command. It never publishes for you: that's public and effectively irreversible, so it's the one place the do-it-yourself default stops.
 
 ## `make update`
 
@@ -42,7 +43,7 @@ Or from a local clone:
 bmo add .
 ```
 
-Installs as the `zanka` skill (`/zanka` in Claude Code). It also triggers automatically at the start of project work — scaffolding, docs, builds, installs, releases, and permission wrangling.
+Installs as the `zanka` skill (`/zanka` in Claude Code). It also triggers automatically at the start of project work — scaffolding, docs, builds, dev-server runs, installs, releases, and permission wrangling.
 
 ## Who is Zanka?
 
